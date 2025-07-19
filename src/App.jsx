@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Layout from "./Layout";
+import MainHeader from "./MainHeader";
+import MainContent from "./MainContent";
+import SearchResult from "./SearchResult";
+import LeftPanel from "./LeftPanel";
+import Posts from "./Posts";
+import { Routes, Route } from "react-router";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const pageId = import.meta.env.VITE_MAIN_PAGE_ID;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Layout
+      leftPane={<LeftPanel apiUrl={apiUrl} />}
+      mainPane={
+        <>
+          <MainHeader />
+          <Routes>
+            <Route
+              path="/posts/author/:name"
+              element={<Posts apiUrl={apiUrl} />}
+            />
+            <Route path="/posts/:postId" element={<Posts apiUrl={apiUrl} />} />
+            <Route
+              path="/*"
+              element={<MainContent apiUrl={apiUrl} pageId={pageId} />}
+            />
+            <Route path="/search/result" element={<SearchResult />} />
+          </Routes>
+        </>
+      }
+    />
+  );
 }
-
-export default App
